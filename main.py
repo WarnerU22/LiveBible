@@ -3,10 +3,11 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import os
 
-# Load .env and API key
+# Load .env file (for local development — Render uses its own environment tab)
 load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=api_key)
+
+# OpenAI client will auto-read from the OPENAI_API_KEY in environment
+client = OpenAI()
 
 app = Flask(__name__)
 
@@ -14,10 +15,17 @@ app = Flask(__name__)
 def home():
     response_text = ""
     if request.method == "POST":
-        user_input = request.form["prompt"]
+        user_input = request.form.get("prompt", "")
 
         messages = [
-            {"role": "system", "content": "You are a helpful Christian assistant. When someone shares a struggle, you respond with a relevant Bible verse, a short prayer, and a sentence of encouragement."},
+            {
+                "role": "system",
+                "content": (
+                    "You are a helpful Christian assistant. "
+                    "When someone shares a struggle, respond with a relevant Bible verse, "
+                    "a short prayer, and one sentence of encouragement."
+                )
+            },
             {"role": "user", "content": user_input}
         ]
 
@@ -34,4 +42,3 @@ def home():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
