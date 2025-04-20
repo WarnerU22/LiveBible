@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Bible</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        textarea, input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 5px solid #007BFF;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Bible</h1>
+    <form method="post">
+        <label for="prompt">What are you struggling with?</label><br>
+        <textarea name="prompt" rows="4" required></textarea><br>
+        <input type="submit" value="Get Guidance">
+    </form>
+
+    {% if response %}
+        <div class="response-box">
+            {{ response }}
+        </div>
+    {% endif %}
+</body>
+</html>
