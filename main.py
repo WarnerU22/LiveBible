@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from openai import OpenAI
+import openai
 import os
 
-# Load .env file (for local development — Render uses its own environment tab)
+# Load env file
 load_dotenv()
 
-# OpenAI client will auto-read from the OPENAI_API_KEY in environment
-client = OpenAI()
+# Set API key for old OpenAI client
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
@@ -15,26 +15,19 @@ app = Flask(__name__)
 def home():
     response_text = ""
     if request.method == "POST":
-        user_input = request.form.get("prompt", "")
+        user_input = request.form["prompt"]
 
         messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful Christian assistant. "
-                    "When someone shares a struggle, respond with a relevant Bible verse, "
-                    "a short prayer, and one sentence of encouragement."
-                )
-            },
+            {"role": "system", "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement."},
             {"role": "user", "content": user_input}
         ]
 
         try:
-            response = client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages
             )
-            response_text = response.choices[0].message.content.strip()
+            response_text = response["choices"][0]["message"]["content"].strip()
         except Exception as e:
             response_text = f"❌ Error: {e}"
 
