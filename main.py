@@ -52,12 +52,22 @@ def help_page():
 @app.route("/verse")
 def verse():
     verses = [
-        "For God so loved the world, that he gave his only Son (John 3:16)",
-        "The LORD is my shepherd; I shall not want (Psalm 23:1)",
-        "I can do all things through Christ who strengthens me (Philippians 4:13)",
+        {
+            "text": "For God so loved the world, that he gave his only Son (John 3:16)",
+            "meaning": "God's love is sacrificial and available to everyone. Embrace this love and share it with others."
+        },
+        {
+            "text": "The LORD is my shepherd; I shall not want (Psalm 23:1)",
+            "meaning": "Trust that God will guide and provide for you, even when life feels uncertain."
+        },
+        {
+            "text": "I can do all things through Christ who strengthens me (Philippians 4:13)",
+            "meaning": "With Christ's help you can face any challenge that comes your way."
+        },
     ]
     import random
-    return render_template("verse.html", verse=random.choice(verses))
+    selection = random.choice(verses)
+    return render_template("verse.html", verse=selection["text"], meaning=selection["meaning"])
 
 if __name__ == "__main__":
     app.run(debug=True)
