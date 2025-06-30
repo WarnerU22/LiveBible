@@ -3,45 +3,42 @@
 <head>
     <title>Live Bible</title>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background-color: #f4f4f4;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        textarea, input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            padding-top: 60px;
+            background-color: #f5f7fa;
         }
 
         .response-box {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 1.5rem;
+            padding: 1.25rem;
             background-color: #fff;
-            border-left: 5px solid #007BFF;
+            border-left: 5px solid #0d6efd;
             white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
-    <h1>Live Bible</h1>
-    <form method="post">
-        <label for="prompt">What are you struggling with?</label><br>
-        <textarea name="prompt" rows="4" required></textarea><br>
-        <input type="submit" value="Get Guidance">
-    </form>
+    <div class="container">
+        <h1 class="mb-4">Live Bible</h1>
+        <form method="post">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">What are you struggling with?</label>
+                <textarea id="prompt" name="prompt" rows="4" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Guidance</button>
+        </form>
 
-    {% if response %}
-        <div class="response-box">
-            {{ response }}
-        </div>
-    {% endif %}
+        {% if response %}
+            <div class="response-box mt-4">
+                {{ response }}
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
