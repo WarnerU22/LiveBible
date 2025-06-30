@@ -43,5 +43,21 @@ def contact():
 def mission():
     return render_template("mission.html")
 
+
+@app.route("/help")
+def help_page():
+    return render_template("help.html")
+
+
+@app.route("/verse")
+def verse():
+    verses = [
+        "For God so loved the world, that he gave his only Son (John 3:16)",
+        "The LORD is my shepherd; I shall not want (Psalm 23:1)",
+        "I can do all things through Christ who strengthens me (Philippians 4:13)",
+    ]
+    import random
+    return render_template("verse.html", verse=random.choice(verses))
+
 if __name__ == "__main__":
     app.run(debug=True)
