@@ -33,5 +33,15 @@ def home():
 
     return render_template("index.html", response=response_text)
 
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+
+@app.route("/mission")
+def mission():
+    return render_template("mission.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
