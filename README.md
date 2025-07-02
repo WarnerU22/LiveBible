@@ -1,5 +1,8 @@
 # Live Bible
 
+The site is live at [livebible.live](https://livebible.live). Share the link and
+bookmark it for quick access to encouragement.
+
 Live Bible is a simple web application built with Flask that provides quick Biblical encouragement through the OpenAI API. Users can submit a struggle or topic and receive verses and prayers in response.
 
 ## Development
@@ -14,6 +17,11 @@ python main.py
 ## Contact
 
 For questions reach out to [asklivebible@gmail.com](mailto:asklivebible@gmail.com) or message us on Instagram [@asklivebible](https://instagram.com/asklivebible).
+
+## Features
+
+- Responsive design works on phones and desktops
+- Share button lets you quickly send the site link to friends
 
 ## Monetization Idea
 
