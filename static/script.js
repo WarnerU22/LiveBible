@@ -3,8 +3,8 @@ function initShareButton() {
   if (!btn) return;
   btn.addEventListener('click', async () => {
     const shareData = {
-      title: 'LiveBible.Live',
-      text: 'Find biblical encouragement at LiveBible.Live',
+      title: 'LiveBible',
+      text: 'Find biblical encouragement at LiveBible',
       url: 'https://livebible.live',
     };
     if (navigator.share) {
