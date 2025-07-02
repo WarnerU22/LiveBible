@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Find Encouraging Verses</h1>
+<form method="post" class="mb-3">
+    <div class="mb-3">
+        <label for="topic" class="form-label">What topic would you like help with?</label>
+        <input type="text" id="topic" name="topic" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+{% if results %}
+    <div class="response-box mt-4">
+        {{ results }}
+    </div>
+{% endif %}
+{% endblock %}
