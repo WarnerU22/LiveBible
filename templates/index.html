@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="mb-4">Live Bible</h1>
-<form method="post">
-    <div class="mb-3">
-        <label for="prompt" class="form-label">What are you struggling with?</label>
-        <textarea id="prompt" name="prompt" rows="4" class="form-control" required></textarea>
+<h1 class="mb-4 text-center">Live Bible</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <form method="post">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">What are you struggling with?</label>
+                <textarea id="prompt" name="prompt" rows="4" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Ask for Guidance</button>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary">Get Guidance</button>
-</form>
+</div>
 {% if response %}
     <div class="response-box mt-4">
         {{ response }}

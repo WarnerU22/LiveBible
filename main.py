@@ -49,25 +49,36 @@ def help_page():
     return render_template("help.html")
 
 
-@app.route("/verse")
-def verse():
-    verses = [
-        {
-            "text": "For God so loved the world, that he gave his only Son (John 3:16)",
-            "meaning": "God's love is sacrificial and available to everyone. Embrace this love and share it with others."
-        },
-        {
-            "text": "The LORD is my shepherd; I shall not want (Psalm 23:1)",
-            "meaning": "Trust that God will guide and provide for you, even when life feels uncertain."
-        },
-        {
-            "text": "I can do all things through Christ who strengthens me (Philippians 4:13)",
-            "meaning": "With Christ's help you can face any challenge that comes your way."
-        },
-    ]
-    import random
-    selection = random.choice(verses)
-    return render_template("verse.html", verse=selection["text"], meaning=selection["meaning"])
+@app.route("/verses", methods=["GET", "POST"])
+def verses():
+    """Return encouraging verses based on a user supplied topic."""
+    results = ""
+    topic = ""
+    if request.method == "POST":
+        topic = request.form["topic"]
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "Provide three short Bible verses with references that speak to "
+                    "the given topic. Keep the tone uplifting and return them in "
+                    "bullet form."
+                ),
+            },
+            {"role": "user", "content": topic},
+        ]
+
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+            )
+            results = response["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            results = f"❌ Error: {e}"
+
+    return render_template("verses.html", topic=topic, results=results)
 
 if __name__ == "__main__":
     app.run(debug=True)
