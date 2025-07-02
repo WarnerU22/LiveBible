@@ -10,7 +10,13 @@
 </form>
 {% if results %}
     <div class="response-box mt-4">
-        {{ results }}
+        <ul class="list-unstyled">
+            {% for line in results.split('\n') %}
+                {% if line.strip() %}
+                    <li class="mb-3">{{ line }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 {% endif %}
 {% endblock %}

@@ -61,9 +61,9 @@ def verses():
             {
                 "role": "system",
                 "content": (
-                    "Provide three short Bible verses with references that speak to "
-                    "the given topic. Keep the tone uplifting and return them in "
-                    "bullet form."
+                    "Provide five short Bible verses with references that speak to "
+                    "the given topic. Keep the tone uplifting and return them as "
+                    "bullet points with a blank line between each item for easy reading."
                 ),
             },
             {"role": "user", "content": topic},
