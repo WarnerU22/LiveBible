@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Upgrade - LiveBible{% endblock %}
+{% block content %}
+<h1 class="text-center mb-4">Upgrade to Pro</h1>
+<p class="text-center">Unlimited requests for only $9 per month.</p>
+<div class="text-center my-4">
+    <form action="/upgrade/complete" method="post">
+        <!-- Placeholder PayPal button -->
+        <button type="submit" class="btn btn-primary">Pay with PayPal</button>
+    </form>
+</div>
+<p class="text-center">Have questions? <a href="/contact">Contact us</a>.</p>
+{% endblock %}

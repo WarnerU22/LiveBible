@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-semibold">Faith-Based Answers in Seconds</h1>
+    <p class="lead">Get personalized verses and prayers for any situation.</p>
+    <a href="#ask" class="btn btn-primary">Get Started</a>
+</div>
+<div class="row text-center mb-5">
+    <div class="col-md-4">
+        <h5 class="fw-bold">Fast and Free</h5>
+        <p>Up to 20 daily requests at no cost.</p>
+    </div>
+    <div class="col-md-4">
+        <h5 class="fw-bold">Scripturally Sound</h5>
+        <p>AI-powered answers rooted in the Bible.</p>
+    </div>
+    <div class="col-md-4">
+        <h5 class="fw-bold">Shareable</h5>
+        <p>Easily share encouragement with friends.</p>
+    </div>
+</div>
+<div id="ask" class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <form method="post">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">What's on your mind?</label>
+                <textarea id="prompt" name="prompt" rows="4" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Ask for Guidance</button>
+        </form>
+    </div>
+</div>
+{% if response %}
+    <div class="response-box mt-4">
+        {{ response }}
+    </div>
+    <div class="text-center mt-3">
+        <button id="shareButton" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-share"></i> Share
+        </button>
+    </div>
+{% endif %}
+
+<div class="my-5 text-center">
+    <h2 class="mb-4">Why Trust Us</h2>
+    <p class="mb-3">LiveBible is used by believers around the world seeking quick encouragement.</p>
+    <div class="d-flex justify-content-center mb-4">
+        <div class="logo-placeholder">Logo 1</div>
+        <div class="logo-placeholder">Logo 2</div>
+        <div class="logo-placeholder">Logo 3</div>
+    </div>
+    <blockquote class="blockquote">
+        <p class="mb-2">"This tool has been a blessing for our small group."</p>
+        <footer class="blockquote-footer">Pastor John Doe</footer>
+    </blockquote>
+    <blockquote class="blockquote">
+        <p class="mb-2">"A wonderful resource for daily devotion."</p>
+        <footer class="blockquote-footer">Pastor Mary Johnson</footer>
+    </blockquote>
+</div>
+{% endblock %}
