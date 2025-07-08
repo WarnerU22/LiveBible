@@ -9,7 +9,7 @@
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
 {% if results %}
-    <div class="response-box mt-4">
+    <div class="response-box mt-4" id="versesContainer">
         <ul class="list-unstyled">
             {% for line in results.split('\n') %}
                 {% if line.strip() %}
@@ -17,6 +17,11 @@
                 {% endif %}
             {% endfor %}
         </ul>
+    </div>
+    <div class="text-center mt-3">
+        <button id="copyVersesButton" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-copy"></i> Copy Verses
+        </button>
     </div>
 {% endif %}
 {% endblock %}
