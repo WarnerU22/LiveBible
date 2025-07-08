@@ -30,6 +30,11 @@
     </div>
   </div>
 </nav>
+{% if usage_count is not none %}
+<div class="alert alert-info text-center small mb-2 usage-count">
+    Free uses today: {{ usage_count }}/{{ usage_limit }}
+</div>
+{% endif %}
 <div class="container my-4">
     {% block content %}{% endblock %}
 </div>

@@ -8,108 +8,153 @@ import os
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-app = Flask(__name__, template_folder="../frontend/templates", static_folder="../frontend/static")
+app = Flask(
+    __name__,
+    template_folder="../frontend/templates",
+    static_folder="../frontend/static",
+)
 
 # Track daily usage per IP
 USAGE_LIMIT = 20
 usage_log = {}
 
+
 def _reset_if_new_day(record):
     today = date.today()
-    if record.get('date') != today:
-        record['date'] = today
-        record['count'] = 0
+    if record.get("date") != today:
+        record["date"] = today
+        record["count"] = 0
+
 
 def increment_usage(ip):
-    record = usage_log.setdefault(ip, {'date': date.today(), 'count': 0})
+    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
     _reset_if_new_day(record)
-    record['count'] += 1
+    record["count"] += 1
+
 
 def limit_reached(ip):
-    record = usage_log.setdefault(ip, {'date': date.today(), 'count': 0})
+    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
     _reset_if_new_day(record)
-    return record['count'] >= USAGE_LIMIT
+    return record["count"] >= USAGE_LIMIT
 
-@app.route('/', methods=['GET', 'POST'])
+
+def get_usage_count(ip):
+    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
+    _reset_if_new_day(record)
+    return record["count"]
+
+
+@app.context_processor
+def inject_usage():
+    ip = request.remote_addr
+    unlimited = request.cookies.get("unlimited") == "1"
+    if unlimited:
+        return {"usage_count": None, "usage_limit": USAGE_LIMIT}
+    return {"usage_count": get_usage_count(ip), "usage_limit": USAGE_LIMIT}
+
+
+@app.route("/", methods=["GET", "POST"])
 def home():
-    response_text = ''
+    response_text = ""
     ip = request.remote_addr
     show_modal = False
-    unlimited = request.cookies.get('unlimited') == '1'
-    if request.method == 'POST':
+    unlimited = request.cookies.get("unlimited") == "1"
+    if request.method == "POST":
         if not unlimited and limit_reached(ip):
             show_modal = True
         else:
             if not unlimited:
                 increment_usage(ip)
-            user_input = request.form['prompt']
+            user_input = request.form["prompt"]
             messages = [
-                {"role": "system", "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement."},
-                {"role": "user", "content": user_input}
+                {
+                    "role": "system",
+                    "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement.",
+                },
+                {"role": "user", "content": user_input},
             ]
             try:
-                response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages)
-                response_text = response['choices'][0]['message']['content'].strip()
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo", messages=messages
+                )
+                response_text = response["choices"][0]["message"]["content"].strip()
             except Exception as e:
                 response_text = f"❌ Error: {e}"
-    return render_template('index.html', response=response_text, limit_reached=show_modal)
+    return render_template(
+        "index.html", response=response_text, limit_reached=show_modal
+    )
 
-@app.route('/about')
+
+@app.route("/about")
 def about():
-    return render_template('about.html')
+    return render_template("about.html")
 
-@app.route('/pricing')
+
+@app.route("/pricing")
 def pricing():
-    return render_template('pricing.html')
+    return render_template("pricing.html")
 
-@app.route('/upgrade')
+
+@app.route("/upgrade")
 def upgrade():
-    return render_template('upgrade.html')
+    paypal_client_id = os.getenv("PAYPAL_CLIENT_ID", "sb")
+    paypal_email = os.getenv("PAYPAL_EMAIL", "warnerussery22@gmail.com")
+    return render_template(
+        "upgrade.html", paypal_client_id=paypal_client_id, paypal_email=paypal_email
+    )
 
-@app.route('/upgrade/success')
+
+@app.route("/upgrade/success")
 def upgrade_success():
-    resp = make_response(render_template('upgrade_success.html'))
-    resp.set_cookie('unlimited', '1', max_age=60*60*24*365)
+    resp = make_response(render_template("upgrade_success.html"))
+    resp.set_cookie("unlimited", "1", max_age=60 * 60 * 24 * 365)
     return resp
 
-@app.route('/faq')
+
+@app.route("/faq")
 def faq():
-    return render_template('faq.html')
+    return render_template("faq.html")
 
-@app.route('/terms')
+
+@app.route("/terms")
 def terms():
-    return render_template('terms.html')
+    return render_template("terms.html")
 
-@app.route('/privacy')
+
+@app.route("/privacy")
 def privacy():
-    return render_template('privacy.html')
+    return render_template("privacy.html")
 
-@app.route('/contact')
+
+@app.route("/contact")
 def contact():
-    return render_template('contact.html')
+    return render_template("contact.html")
 
-@app.route('/mission')
+
+@app.route("/mission")
 def mission():
-    return render_template('mission.html')
+    return render_template("mission.html")
 
-@app.route('/help')
+
+@app.route("/help")
 def help_page():
-    return render_template('help.html')
+    return render_template("help.html")
 
-@app.route('/verses', methods=['GET', 'POST'])
+
+@app.route("/verses", methods=["GET", "POST"])
 def verses():
-    results = ''
-    topic = ''
+    results = ""
+    topic = ""
     ip = request.remote_addr
     show_modal = False
-    unlimited = request.cookies.get('unlimited') == '1'
-    if request.method == 'POST':
+    unlimited = request.cookies.get("unlimited") == "1"
+    if request.method == "POST":
         if not unlimited and limit_reached(ip):
             show_modal = True
         else:
             if not unlimited:
                 increment_usage(ip)
-            topic = request.form['topic']
+            topic = request.form["topic"]
             messages = [
                 {
                     "role": "system",
@@ -120,8 +165,12 @@ def verses():
                 {"role": "user", "content": topic},
             ]
             try:
-                response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages)
-                results = response['choices'][0]['message']['content'].strip()
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo", messages=messages
+                )
+                results = response["choices"][0]["message"]["content"].strip()
             except Exception as e:
                 results = f"❌ Error: {e}"
-    return render_template('verses.html', topic=topic, results=results, limit_reached=show_modal)
+    return render_template(
+        "verses.html", topic=topic, results=results, limit_reached=show_modal
+    )
