@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from dotenv import load_dotenv
 from datetime import date
 import openai
@@ -35,11 +35,13 @@ def home():
     response_text = ''
     ip = request.remote_addr
     show_modal = False
+    unlimited = request.cookies.get('unlimited') == '1'
     if request.method == 'POST':
-        if limit_reached(ip):
+        if not unlimited and limit_reached(ip):
             show_modal = True
         else:
-            increment_usage(ip)
+            if not unlimited:
+                increment_usage(ip)
             user_input = request.form['prompt']
             messages = [
                 {"role": "system", "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement."},
@@ -59,6 +61,16 @@ def about():
 @app.route('/pricing')
 def pricing():
     return render_template('pricing.html')
+
+@app.route('/upgrade')
+def upgrade():
+    return render_template('upgrade.html')
+
+@app.route('/upgrade/success')
+def upgrade_success():
+    resp = make_response(render_template('upgrade_success.html'))
+    resp.set_cookie('unlimited', '1', max_age=60*60*24*365)
+    return resp
 
 @app.route('/faq')
 def faq():
@@ -90,11 +102,13 @@ def verses():
     topic = ''
     ip = request.remote_addr
     show_modal = False
+    unlimited = request.cookies.get('unlimited') == '1'
     if request.method == 'POST':
-        if limit_reached(ip):
+        if not unlimited and limit_reached(ip):
             show_modal = True
         else:
-            increment_usage(ip)
+            if not unlimited:
+                increment_usage(ip)
             topic = request.form['topic']
             messages = [
                 {
