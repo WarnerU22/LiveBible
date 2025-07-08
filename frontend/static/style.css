@@ -27,6 +27,16 @@ body {
     border-radius: 0.25rem;
     white-space: pre-wrap;
 }
+
+#prompt.prompt-box {
+    border: 2px solid #0f5132;
+    box-shadow: 0 0 5px rgba(15, 81, 50, 0.4);
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+#prompt.prompt-box:focus {
+    border-color: #0c4128;
+    box-shadow: 0 0 8px rgba(15, 81, 50, 0.6);
+}
 .logo-placeholder {
     background-color: #f0f0f0;
     height: 50px;

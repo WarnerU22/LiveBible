@@ -13,15 +13,6 @@ function initShareButton() {
   });
 }
 
-function showUpgradeModalIfNeeded() {
-  const modalEl = document.getElementById('upgradeModal');
-  if (modalEl && modalEl.dataset.show === 'true') {
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
-  }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   initShareButton();
-  showUpgradeModalIfNeeded();
 });
