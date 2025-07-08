@@ -1,0 +1,40 @@
+body {
+    font-family: 'Inter', sans-serif;
+    padding-top: 70px;
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand {
+    font-weight: 600;
+    color: #0f5132 !important;
+}
+.btn-primary {
+    background-color: #0f5132;
+    border-color: #0f5132;
+}
+.btn-primary:hover {
+    background-color: #0c4128;
+    border-color: #0c4128;
+}
+.response-box {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background-color: #fff;
+    border-left: 5px solid #0f5132;
+    border-radius: 0.25rem;
+    white-space: pre-wrap;
+}
+.logo-placeholder {
+    background-color: #f0f0f0;
+    height: 50px;
+    width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    font-weight: bold;
+    color: #666;
+}

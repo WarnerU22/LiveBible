@@ -1,28 +1,18 @@
 # Live Bible
 
-Access the site at [livebible.live](https://livebible.live) and bookmark it for
-quick encouragement.
-
-Live Bible is a simple web application built with Flask that provides quick Biblical encouragement through the OpenAI API. Users can submit a struggle or topic and receive verses and prayers in response.
+LiveBible provides quick Bible-based encouragement powered by AI. Users can submit a struggle or topic and receive related verses and prayers.
 
 ## Development
 
-Install dependencies from `requirements.txt` and run `python main.py`.
+Install dependencies and run the Flask server:
 
 ```bash
 pip install -r requirements.txt
 python main.py
 ```
 
+The application source is organized with a `backend` folder for Flask logic and a `frontend` folder for templates and static assets.
+
 ## Contact
 
-For questions reach out to [asklivebible@gmail.com](mailto:asklivebible@gmail.com) or message us on Instagram [@asklivebible](https://instagram.com/asklivebible).
-
-## Features
-
-- Responsive design works on phones and desktops
-- Share button lets you quickly send the site link to friends
-
-## Monetization Idea
-
-To monetize the service in the future, consider adding a voluntary donation feature. A small "Support" button could link to a platform like Buy Me a Coffee or allow visitors to make one-time or recurring contributions. This keeps the core app free while helping cover costs.
+For questions reach out to [asklivebible@gmail.com](mailto:asklivebible@gmail.com) or on Instagram [@asklivebible](https://instagram.com/asklivebible).
