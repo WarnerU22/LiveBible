@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from datetime import date
 import openai
 import os
 
@@ -14,75 +13,28 @@ app = Flask(
     static_folder="../frontend/static",
 )
 
-# Track daily usage per IP
-USAGE_LIMIT = 20
-usage_log = {}
-
-
-def _reset_if_new_day(record):
-    today = date.today()
-    if record.get("date") != today:
-        record["date"] = today
-        record["count"] = 0
-
-
-def increment_usage(ip):
-    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
-    _reset_if_new_day(record)
-    record["count"] += 1
-
-
-def limit_reached(ip):
-    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
-    _reset_if_new_day(record)
-    return record["count"] >= USAGE_LIMIT
-
-
-def get_usage_count(ip):
-    record = usage_log.setdefault(ip, {"date": date.today(), "count": 0})
-    _reset_if_new_day(record)
-    return record["count"]
-
-
-@app.context_processor
-def inject_usage():
-    ip = request.remote_addr
-    unlimited = request.cookies.get("unlimited") == "1"
-    if unlimited:
-        return {"usage_count": None, "usage_limit": USAGE_LIMIT}
-    return {"usage_count": get_usage_count(ip), "usage_limit": USAGE_LIMIT}
 
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     response_text = ""
-    ip = request.remote_addr
-    show_modal = False
-    unlimited = request.cookies.get("unlimited") == "1"
     if request.method == "POST":
-        if not unlimited and limit_reached(ip):
-            show_modal = True
-        else:
-            if not unlimited:
-                increment_usage(ip)
-            user_input = request.form["prompt"]
-            messages = [
-                {
-                    "role": "system",
-                    "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement.",
-                },
-                {"role": "user", "content": user_input},
-            ]
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo", messages=messages
-                )
-                response_text = response["choices"][0]["message"]["content"].strip()
-            except Exception as e:
-                response_text = f"❌ Error: {e}"
-    return render_template(
-        "index.html", response=response_text, limit_reached=show_modal
-    )
+        user_input = request.form["prompt"]
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a helpful Christian assistant. When someone shares a struggle, respond with a relevant Bible verse, a short prayer, and a sentence of encouragement.",
+            },
+            {"role": "user", "content": user_input},
+        ]
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=messages
+            )
+            response_text = response["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            response_text = f"❌ Error: {e}"
+    return render_template("index.html", response=response_text)
 
 
 @app.route("/about")
@@ -90,25 +42,6 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/pricing")
-def pricing():
-    return render_template("pricing.html")
-
-
-@app.route("/upgrade")
-def upgrade():
-    paypal_client_id = os.getenv("PAYPAL_CLIENT_ID", "sb")
-    paypal_email = os.getenv("PAYPAL_EMAIL", "warnerussery22@gmail.com")
-    return render_template(
-        "upgrade.html", paypal_client_id=paypal_client_id, paypal_email=paypal_email
-    )
-
-
-@app.route("/upgrade/success")
-def upgrade_success():
-    resp = make_response(render_template("upgrade_success.html"))
-    resp.set_cookie("unlimited", "1", max_age=60 * 60 * 24 * 365)
-    return resp
 
 
 @app.route("/faq")
@@ -145,32 +78,22 @@ def help_page():
 def verses():
     results = ""
     topic = ""
-    ip = request.remote_addr
-    show_modal = False
-    unlimited = request.cookies.get("unlimited") == "1"
     if request.method == "POST":
-        if not unlimited and limit_reached(ip):
-            show_modal = True
-        else:
-            if not unlimited:
-                increment_usage(ip)
-            topic = request.form["topic"]
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "Provide five short Bible verses with references that speak to the given topic. Keep the tone uplifting and return them as bullet points with a blank line between each item for easy reading."
-                    ),
-                },
-                {"role": "user", "content": topic},
-            ]
-            try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo", messages=messages
-                )
-                results = response["choices"][0]["message"]["content"].strip()
-            except Exception as e:
-                results = f"❌ Error: {e}"
-    return render_template(
-        "verses.html", topic=topic, results=results, limit_reached=show_modal
-    )
+        topic = request.form["topic"]
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "Provide five short Bible verses with references that speak to the given topic. Keep the tone uplifting and return them as bullet points with a blank line between each item for easy reading."
+                ),
+            },
+            {"role": "user", "content": topic},
+        ]
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=messages
+            )
+            results = response["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            results = f"❌ Error: {e}"
+    return render_template("verses.html", topic=topic, results=results)
